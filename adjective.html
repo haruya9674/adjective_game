@@ -50,6 +50,13 @@ h1{margin-bottom:10px}
   font-size:36px;
   margin:25px 0;
   font-weight:bold;
+  cursor:pointer;
+}
+
+.jp{
+  font-size:20px;
+  color:#555;
+  height:24px;
 }
 
 .btn{
@@ -104,7 +111,8 @@ h1{margin-bottom:10px}
 </div>
 
 <div id="game" class="section active">
-  <div class="word" id="gameWord">---</div>
+  <div class="word" id="gameWord" onclick="showJP()">---</div>
+  <div class="jp" id="jpWord"></div>
 
   <button class="btn btn-yes" onclick="answer(true)">Adjective</button>
   <button class="btn btn-no" onclick="answer(false)">Not Adjective</button>
@@ -138,65 +146,61 @@ function show(id,el){
   el.classList.add('active');
 }
 
-/* ===== 大幅増量語彙 ===== */
+/* 英語 / 日本語 / 形容詞判定 */
 const words = [
-  // adjectives
-  ["happy",true],["sad",true],["angry",true],["excited",true],["proud",true],
-  ["kind",true],["polite",true],["brave",true],["careful",true],["lazy",true],
-  ["big",true],["small",true],["tall",true],["short",true],["wide",true],
-  ["fast",true],["slow",true],["early",true],["late",true],["quick",true],
-  ["hot",true],["cold",true],["warm",true],["cool",true],["fresh",true],
-  ["old",true],["new",true],["young",true],["modern",true],["ancient",true],
-  ["easy",true],["hard",true],["simple",true],["difficult",true],["clear",true],
-  ["strong",true],["weak",true],["heavy",true],["light",true],["soft",true],
-  ["clean",true],["dirty",true],["bright",true],["dark",true],["noisy",true],
-  ["quiet",true],["safe",true],["dangerous",true],["healthy",true],["sick",true],
+  ["happy","うれしい",true],["sad","かなしい",true],["angry","おこった",true],
+  ["excited","わくわくした",true],["kind","やさしい",true],
+  ["brave","ゆうかんな",true],["lazy","なまけた",true],
+  ["big","大きい",true],["small","小さい",true],["fast","はやい",true],
+  ["slow","おそい",true],["hot","あつい",true],["cold","さむい",true],
+  ["easy","かんたん",true],["difficult","むずかしい",true],
+  ["clean","きれい",true],["dirty","よごれた",true],
+  ["strong","つよい",true],["weak","よわい",true],
+  ["quiet","しずかな",true],["noisy","うるさい",true],
 
-  // not adjectives
-  ["teacher",false],["student",false],["doctor",false],["driver",false],["baby",false],
-  ["dog",false],["cat",false],["bird",false],["fish",false],["horse",false],
-  ["run",false],["jump",false],["eat",false],["drink",false],["sleep",false],
-  ["read",false],["write",false],["play",false],["walk",false],["think",false],
-  ["school",false],["house",false],["city",false],["river",false],["mountain",false],
-  ["book",false],["pen",false],["chair",false],["table",false],["phone",false],
-  ["music",false],["movie",false],["game",false],["food",false],["water",false]
+  ["teacher","先生",false],["dog","犬",false],["cat","ねこ",false],
+  ["run","走る",false],["eat","食べる",false],
+  ["book","本",false],["school","学校",false],
+  ["music","音楽",false],["water","水",false]
 ];
 
-/* ===== シャッフルして順番再生 ===== */
-let shuffled = [];
-let index = 0;
-let score = 0;
+let shuffled=[], index=0, score=0, current=null;
 
 function shuffle(){
-  shuffled = [...words].sort(()=>Math.random()-0.5);
-  index = 0;
+  shuffled=[...words].sort(()=>Math.random()-0.5);
+  index=0;
 }
 
 function next(){
-  if(index >= shuffled.length) shuffle();
-  current = shuffled[index++];
-  document.getElementById("gameWord").textContent = current[0];
-  document.getElementById("result").textContent = "";
+  if(index>=shuffled.length) shuffle();
+  current=shuffled[index++];
+  document.getElementById("gameWord").textContent=current[0];
+  document.getElementById("jpWord").textContent="";
+  document.getElementById("result").textContent="";
+}
+
+function showJP(){
+  if(current) document.getElementById("jpWord").textContent=current[1];
 }
 
 function answer(isAdj){
-  const correct = isAdj === current[1];
-  document.getElementById("result").textContent = correct ? "Correct!" : "Wrong!";
-  speak(correct ? "Correct" : "Wrong");
+  const correct=isAdj===current[2];
+  document.getElementById("result").textContent=correct?"Correct!":"Wrong!";
+  speak(correct?"Correct":"Wrong");
   if(correct) score++;
-  document.getElementById("score").textContent = "Score: " + score;
+  document.getElementById("score").textContent="Score: "+score;
   setTimeout(next,600);
 }
 
-/* ===== リスト表示 ===== */
-const adjList = document.getElementById("adjList");
-const notList = document.getElementById("notList");
+/* リスト */
+const adjList=document.getElementById("adjList");
+const notList=document.getElementById("notList");
 
 words.forEach(w=>{
-  const d = document.createElement("div");
-  d.textContent = w[0];
-  d.onclick = ()=>speak(w[0]);
-  (w[1] ? adjList : notList).appendChild(d);
+  const d=document.createElement("div");
+  d.textContent=w[0];
+  d.onclick=()=>speak(w[0]);
+  (w[2]?adjList:notList).appendChild(d);
 });
 
 shuffle();
