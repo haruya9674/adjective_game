@@ -13,16 +13,31 @@ body{
   padding:30px 20px;
 }
 h1{
-  font-size:32px;
+  font-size:30px;
   margin-bottom:10px;
 }
+.lang-buttons{
+  margin-bottom:15px;
+}
+.lang-buttons button{
+  padding:8px 14px;
+  margin:0 5px;
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
+  cursor:pointer;
+}
 .box{
-  max-width:600px;
+  max-width:560px;
   margin:20px auto;
   background:white;
-  padding:25px;
-  border-radius:12px;
+  padding:24px;
+  border-radius:14px;
   box-shadow:0 4px 10px rgba(0,0,0,.1);
+}
+ul{
+  text-align:left;
+  line-height:1.6;
 }
 .start-btn{
   display:inline-block;
@@ -38,49 +53,66 @@ h1{
 .start-btn:active{
   transform:scale(0.95);
 }
-ul{
-  text-align:left;
-  margin-top:15px;
-  line-height:1.6;
-}
 .footer{
-  margin-top:30px;
+  margin-top:25px;
+  font-size:13px;
   color:#666;
-  font-size:14px;
 }
 </style>
 </head>
 
 <body>
 
-<h1>English Adjective Learning</h1>
+<h1>English Adjective Game</h1>
+
+<div class="lang-buttons">
+  <button onclick="setLang('jp')">日本語</button>
+  <button onclick="setLang('kr')">한국어</button>
+</div>
 
 <div class="box">
-  <h2>How to Play</h2>
-
-  <ul>
-    <li>You will see one English word on the screen.</li>
-    <li>Tap the word to see its Japanese meaning.</li>
-    <li>Decide if the word is an <strong>Adjective</strong> or <strong>Not an Adjective</strong>.</li>
-    <li>Tap the green button for <strong>Adjective</strong>.</li>
-    <li>Tap the red button for <strong>Not Adjective</strong>.</li>
-    <li>You will hear a voice saying <em>Correct</em> or <em>Wrong</em>.</li>
-    <li>Your score increases when your answer is correct.</li>
-  </ul>
-
-  <p>
-    You can also check the <strong>Adjective List</strong> and
-    <strong>Not Adjective List</strong> inside the game.
-  </p>
+  <div id="desc"></div>
 
   <a href="adjective.html" class="start-btn">
-    ▶ Start the Game
+    ▶ Start Game
   </a>
 </div>
 
 <div class="footer">
-  English learning game for EFL learners
+  Simple English learning game
 </div>
+
+<script>
+const text = {
+  jp: `
+  <h2>あそびかた</h2>
+  <ul>
+    <li>英単語が1つ表示されます。</li>
+    <li>単語をタップすると日本語が表示されます。</li>
+    <li>形容詞だと思ったら <strong>Adjective</strong>。</li>
+    <li>違うと思ったら <strong>Not Adjective</strong>。</li>
+    <li>正解するとスコアが増えます。</li>
+  </ul>
+  `,
+  kr: `
+  <h2>게임 방법</h2>
+  <ul>
+    <li>영어 단어가 하나 표시됩니다.</li>
+    <li>단어를 누르면 일본어 뜻이 나옵니다.</li>
+    <li>형용사라면 <strong>Adjective</strong>를 누르세요.</li>
+    <li>아니라면 <strong>Not Adjective</strong>를 누르세요.</li>
+    <li>정답이면 점수가 올라갑니다.</li>
+  </ul>
+  `
+};
+
+function setLang(lang){
+  document.getElementById("desc").innerHTML = text[lang];
+}
+
+// default language
+setLang("jp");
+</script>
 
 </body>
 </html>
