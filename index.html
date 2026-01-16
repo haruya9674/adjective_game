@@ -14,7 +14,6 @@ body{
 }
 h1{margin-bottom:10px}
 
-/* ===== back button ===== */
 .back-menu{
   display:inline-block;
   margin-bottom:15px;
@@ -25,11 +24,8 @@ h1{margin-bottom:10px}
   text-decoration:none;
   font-weight:bold;
 }
-.back-menu:active{
-  transform:scale(0.95);
-}
+.back-menu:active{transform:scale(0.95)}
 
-/* ===== tabs ===== */
 .tabs{
   display:flex;
   gap:6px;
@@ -56,7 +52,6 @@ h1{margin-bottom:10px}
   font-weight:bold;
 }
 
-/* ===== answer buttons ===== */
 .btn{
   width:140px;
   font-size:20px;
@@ -67,17 +62,9 @@ h1{margin-bottom:10px}
   font-weight:bold;
   cursor:pointer;
 }
-.btn-yes{
-  background:#4caf50;
-  color:white;
-}
-.btn-no{
-  background:#f44336;
-  color:white;
-}
-.btn:active{
-  transform:scale(0.95);
-}
+.btn-yes{background:#4caf50;color:white}
+.btn-no{background:#f44336;color:white}
+.btn:active{transform:scale(0.95)}
 
 .result{
   font-size:22px;
@@ -106,40 +93,31 @@ h1{margin-bottom:10px}
 
 <body>
 
-<!-- 🔙 Back to Menu -->
 <a href="index.html" class="back-menu">← Back to Menu</a>
 
 <h1>Adjective Learning</h1>
 
 <div class="tabs">
-  <div class="tab active" onclick="show('game')">Game</div>
-  <div class="tab" onclick="show('adj')">Adjective List</div>
-  <div class="tab" onclick="show('not')">Not Adjective List</div>
+  <div class="tab active" onclick="show('game',this)">Game</div>
+  <div class="tab" onclick="show('adj',this)">Adjective List</div>
+  <div class="tab" onclick="show('not',this)">Not Adjective List</div>
 </div>
 
-<!-- GAME -->
 <div id="game" class="section active">
   <div class="word" id="gameWord">---</div>
 
-  <button class="btn btn-yes" onclick="answer(true)">
-    Adjective
-  </button>
-
-  <button class="btn btn-no" onclick="answer(false)">
-    Not Adjective
-  </button>
+  <button class="btn btn-yes" onclick="answer(true)">Adjective</button>
+  <button class="btn btn-no" onclick="answer(false)">Not Adjective</button>
 
   <div class="result" id="result"></div>
   <div class="score" id="score">Score: 0</div>
 </div>
 
-<!-- ADJECTIVE LIST -->
 <div id="adj" class="section">
   <h2>Adjectives</h2>
   <div class="list" id="adjList"></div>
 </div>
 
-<!-- NOT ADJECTIVE LIST -->
 <div id="not" class="section">
   <h2>Not Adjectives</h2>
   <div class="list" id="notList"></div>
@@ -153,34 +131,50 @@ function speak(text){
   speechSynthesis.speak(u);
 }
 
-function show(id){
+function show(id,el){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  event.target.classList.add('active');
+  el.classList.add('active');
 }
 
+/* ===== 大幅増量語彙 ===== */
 const words = [
-  ["happy",true],["sad",true],["angry",true],["excited",true],
-  ["friendly",true],["kind",true],["polite",true],["brave",true],
-  ["big",true],["small",true],["tall",true],["short",true],
-  ["fast",true],["slow",true],["clean",true],["dirty",true],
-  ["bright",true],["dark",true],["quiet",true],["loud",true],
-  ["safe",true],["dangerous",true],["easy",true],["difficult",true],
-  ["strong",true],["weak",true],["early",true],["late",true],
-  ["hot",true],["cold",true],["fresh",true],["old",true],
-  ["teacher",false],["dog",false],["cat",false],["run",false],
-  ["jump",false],["eat",false],["drink",false],["city",false],
-  ["book",false],["music",false],["play",false],["write",false],
-  ["read",false],["water",false],["car",false],["house",false],
-  ["school",false],["child",false],["think",false],["walk",false]
+  // adjectives
+  ["happy",true],["sad",true],["angry",true],["excited",true],["proud",true],
+  ["kind",true],["polite",true],["brave",true],["careful",true],["lazy",true],
+  ["big",true],["small",true],["tall",true],["short",true],["wide",true],
+  ["fast",true],["slow",true],["early",true],["late",true],["quick",true],
+  ["hot",true],["cold",true],["warm",true],["cool",true],["fresh",true],
+  ["old",true],["new",true],["young",true],["modern",true],["ancient",true],
+  ["easy",true],["hard",true],["simple",true],["difficult",true],["clear",true],
+  ["strong",true],["weak",true],["heavy",true],["light",true],["soft",true],
+  ["clean",true],["dirty",true],["bright",true],["dark",true],["noisy",true],
+  ["quiet",true],["safe",true],["dangerous",true],["healthy",true],["sick",true],
+
+  // not adjectives
+  ["teacher",false],["student",false],["doctor",false],["driver",false],["baby",false],
+  ["dog",false],["cat",false],["bird",false],["fish",false],["horse",false],
+  ["run",false],["jump",false],["eat",false],["drink",false],["sleep",false],
+  ["read",false],["write",false],["play",false],["walk",false],["think",false],
+  ["school",false],["house",false],["city",false],["river",false],["mountain",false],
+  ["book",false],["pen",false],["chair",false],["table",false],["phone",false],
+  ["music",false],["movie",false],["game",false],["food",false],["water",false]
 ];
 
+/* ===== シャッフルして順番再生 ===== */
+let shuffled = [];
+let index = 0;
 let score = 0;
-let current = null;
+
+function shuffle(){
+  shuffled = [...words].sort(()=>Math.random()-0.5);
+  index = 0;
+}
 
 function next(){
-  current = words[Math.floor(Math.random()*words.length)];
+  if(index >= shuffled.length) shuffle();
+  current = shuffled[index++];
   document.getElementById("gameWord").textContent = current[0];
   document.getElementById("result").textContent = "";
 }
@@ -194,6 +188,7 @@ function answer(isAdj){
   setTimeout(next,600);
 }
 
+/* ===== リスト表示 ===== */
 const adjList = document.getElementById("adjList");
 const notList = document.getElementById("notList");
 
@@ -204,6 +199,7 @@ words.forEach(w=>{
   (w[1] ? adjList : notList).appendChild(d);
 });
 
+shuffle();
 next();
 </script>
 
