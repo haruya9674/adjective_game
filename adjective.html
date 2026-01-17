@@ -26,26 +26,6 @@ h1{margin-bottom:10px}
 }
 .back-menu:active{transform:scale(0.95)}
 
-.tabs{
-  display:flex;
-  gap:6px;
-  margin-bottom:20px;
-}
-.tab{
-  flex:1;
-  padding:10px;
-  background:#ddd;
-  border-radius:8px;
-  cursor:pointer;
-}
-.tab.active{
-  background:#87ceeb;
-  font-weight:bold;
-}
-
-.section{display:none}
-.section.active{display:block}
-
 .word{
   font-size:36px;
   margin:25px 0;
@@ -82,19 +62,6 @@ h1{margin-bottom:10px}
   margin-top:10px;
   font-weight:bold;
 }
-
-.list{
-  max-width:500px;
-  margin:auto;
-}
-.list div{
-  background:white;
-  padding:12px;
-  margin:6px 0;
-  border-radius:6px;
-  cursor:pointer;
-  box-shadow:0 2px 6px rgba(0,0,0,.1);
-}
 </style>
 </head>
 
@@ -104,50 +71,25 @@ h1{margin-bottom:10px}
 
 <h1>Adjective Learning</h1>
 
-<div class="tabs">
-  <div class="tab active" onclick="show('game',this)">Game</div>
-  <div class="tab" onclick="show('adj',this)">Adjective List</div>
-  <div class="tab" onclick="show('not',this)">Not Adjective List</div>
-</div>
+<div class="word" id="gameWord" onclick="showJP()">---</div>
+<div class="jp" id="jpWord"></div>
 
-<div id="game" class="section active">
-  <div class="word" id="gameWord" onclick="showJP()">---</div>
-  <div class="jp" id="jpWord"></div>
+<button class="btn btn-yes" onclick="answer(true)">Adjective</button>
+<button class="btn btn-no" onclick="answer(false)">Not Adjective</button>
 
-  <button class="btn btn-yes" onclick="answer(true)">Adjective</button>
-  <button class="btn btn-no" onclick="answer(false)">Not Adjective</button>
-
-  <div class="result" id="result"></div>
-  <div class="score" id="score">Score: 0</div>
-</div>
-
-<div id="adj" class="section">
-  <h2>Adjectives</h2>
-  <div class="list" id="adjList"></div>
-</div>
-
-<div id="not" class="section">
-  <h2>Not Adjectives</h2>
-  <div class="list" id="notList"></div>
-</div>
+<div class="result" id="result"></div>
+<div class="score" id="score">Score: 0</div>
 
 <script>
 function speak(text){
   speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = "en-US";
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang="en-US";
   speechSynthesis.speak(u);
 }
 
-function show(id,el){
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  el.classList.add('active');
-}
-
-/* 英語 / 日本語 / 形容詞判定 */
-const words = [
+/* Game word list (unchanged) */
+const words=[
   ["happy","うれしい",true],["sad","かなしい",true],["angry","おこった",true],
   ["excited","わくわくした",true],["kind","やさしい",true],
   ["brave","ゆうかんな",true],["lazy","なまけた",true],
@@ -174,34 +116,28 @@ function shuffle(){
 function next(){
   if(index>=shuffled.length) shuffle();
   current=shuffled[index++];
-  document.getElementById("gameWord").textContent=current[0];
-  document.getElementById("jpWord").textContent="";
-  document.getElementById("result").textContent="";
+  gameWord.textContent=current[0];
+  jpWord.textContent="";
+  result.textContent="";
 }
 
 function showJP(){
-  if(current) document.getElementById("jpWord").textContent=current[1];
+  if(current) jpWord.textContent=current[1];
 }
 
 function answer(isAdj){
   const correct=isAdj===current[2];
-  document.getElementById("result").textContent=correct?"Correct!":"Wrong!";
+  result.textContent=correct?"Correct!":"Wrong!";
   speak(correct?"Correct":"Wrong");
   if(correct) score++;
-  document.getElementById("score").textContent="Score: "+score;
+  scoreEl.textContent="Score: "+score;
   setTimeout(next,600);
 }
 
-/* リスト */
-const adjList=document.getElementById("adjList");
-const notList=document.getElementById("notList");
-
-words.forEach(w=>{
-  const d=document.createElement("div");
-  d.textContent=w[0];
-  d.onclick=()=>speak(w[0]);
-  (w[2]?adjList:notList).appendChild(d);
-});
+const gameWord=document.getElementById("gameWord");
+const jpWord=document.getElementById("jpWord");
+const result=document.getElementById("result");
+const scoreEl=document.getElementById("score");
 
 shuffle();
 next();
