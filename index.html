@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Word Game Menu</title>
+<title>Adjective Game Menu</title>
 
 <style>
 body{
@@ -66,60 +66,71 @@ h1{margin-bottom:10px}
 
 <h1>Adjective Game</h1>
 
-<!-- language -->
+<!-- language switch -->
 <div>
-  <button class="lang-btn active" onclick="setLang('jp',this)">日本語</button>
+  <button class="lang-btn active" onclick="setLang('en',this)">English</button>
+  <button class="lang-btn" onclick="setLang('jp',this)">日本語</button>
   <button class="lang-btn" onclick="setLang('kr',this)">한국어</button>
 </div>
 
 <!-- description -->
-<div class="desc" id="desc-jp">
-  英単語が「形容詞かどうか」を当てるゲームです。<br>
-  正しいボタンをタップして遊びましょう。
-</div>
-
-<div class="desc" id="desc-kr" style="display:none">
-  영어 단어가 형용사인지 맞히는 게임입니다.<br>
-  맞는 버튼을 눌러보세요.
+<div class="desc" id="desc">
+Tap the correct button to decide whether the word is an adjective or not.
 </div>
 
 <!-- buttons -->
-<button class="menu-btn" onclick="location.href='adjective.html'">
-🎮 ゲームスタート
+<button class="menu-btn" id="btnGame" onclick="location.href='adjective.html'">
+🎮 Start Game
 </button>
 
-<button class="menu-btn" onclick="toggleList('adjList')">
-📘 形容詞リスト
+<button class="menu-btn" id="btnAdj" onclick="toggleList('adjList')">
+📘 Adjective List
 </button>
 
 <div class="list-box" id="adjList">
   <div>happy</div><div>sad</div><div>angry</div><div>excited</div><div>proud</div>
   <div>kind</div><div>polite</div><div>brave</div><div>careful</div><div>lazy</div>
-  <div>big</div><div>small</div><div>tall</div><div>short</div><div>wide</div>
-  <div>fast</div><div>slow</div><div>early</div><div>late</div><div>hot</div>
-  <div>cold</div><div>warm</div><div>cool</div><div>old</div><div>new</div>
-  <div>easy</div><div>hard</div><div>simple</div><div>difficult</div><div>strong</div>
-  <div>weak</div><div>heavy</div><div>light</div><div>clean</div><div>dirty</div>
-  <div>bright</div><div>dark</div><div>quiet</div><div>noisy</div><div>safe</div>
+  <div>big</div><div>small</div><div>fast</div><div>slow</div><div>hot</div>
+  <div>cold</div><div>easy</div><div>difficult</div><div>strong</div><div>weak</div>
 </div>
 
-<button class="menu-btn" onclick="toggleList('notList')">
-📕 形容詞じゃないリスト
+<button class="menu-btn" id="btnNot" onclick="toggleList('notList')">
+📕 Not Adjective List
 </button>
 
 <div class="list-box" id="notList">
-  <div>teacher</div><div>student</div><div>doctor</div><div>baby</div>
-  <div>dog</div><div>cat</div><div>bird</div><div>run</div><div>eat</div>
-  <div>drink</div><div>sleep</div><div>read</div><div>write</div>
-  <div>school</div><div>house</div><div>city</div><div>book</div>
-  <div>pen</div><div>chair</div><div>table</div><div>music</div>
-  <div>movie</div><div>game</div><div>food</div><div>water</div>
+  <div>teacher</div><div>student</div><div>dog</div><div>cat</div><div>run</div>
+  <div>eat</div><div>drink</div><div>school</div><div>book</div><div>music</div>
 </div>
 
 <script>
+const texts = {
+  en:{
+    desc:"Tap the correct button to decide whether the word is an adjective or not.",
+    game:"🎮 Start Game",
+    adj:"📘 Adjective List",
+    not:"📕 Not Adjective List"
+  },
+  jp:{
+    desc:"英単語が形容詞かどうかを判断するゲームです。",
+    game:"🎮 ゲームスタート",
+    adj:"📘 形容詞リスト",
+    not:"📕 形容詞じゃないリスト"
+  },
+  kr:{
+    desc:"영어 단어가 형용사인지 아닌지 맞히는 게임입니다.",
+    game:"🎮 게임 시작",
+    adj:"📘 형용사 목록",
+    not:"📕 형용사가 아닌 단어"
+  }
+};
+
 function setLang(lang,btn){
-  document.getElementById("desc-jp").style.display = lang==="jp"?"block":"none";
-  document.getElementById("desc-kr").style.display = lang==="kr"?"block":"none";
+  document.getElementById("desc").textContent = texts[lang].desc;
+  document.getElementById("btnGame").textContent = texts[lang].game;
+  document.getElementById("btnAdj").textContent = texts[lang].adj;
+  document.getElementById("btnNot").textContent = texts[lang].not;
+
   document.querySelectorAll(".lang-btn").forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");
 }
