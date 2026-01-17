@@ -1,107 +1,133 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>English Adjective Game</title>
+<title>Word Game Menu</title>
 
 <style>
 body{
   font-family: system-ui, sans-serif;
-  background:#f0f8ff;
   text-align:center;
-  padding:30px 20px;
-}
-h1{font-size:28px}
-
-.box{
-  max-width:600px;
-  margin:20px auto;
-  background:white;
-  padding:22px;
-  border-radius:14px;
-  box-shadow:0 4px 10px rgba(0,0,0,.1);
+  background:#f4faff;
+  padding:20px;
 }
 
-.list{
-  max-width:500px;
-  margin:auto;
-}
-.list div{
-  background:#fff;
-  padding:12px;
-  margin:6px 0;
-  border-radius:6px;
+h1{margin-bottom:10px}
+
+.lang-btn{
+  padding:6px 12px;
+  margin:4px;
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
   cursor:pointer;
-  box-shadow:0 2px 6px rgba(0,0,0,.1);
+}
+.lang-btn.active{background:#87ceeb}
+
+.desc{
+  max-width:520px;
+  margin:15px auto 25px;
+  font-size:16px;
 }
 
-.start-btn{
-  display:inline-block;
-  margin:18px 0;
-  padding:16px 30px;
+.menu-btn{
+  display:block;
+  width:260px;
+  margin:12px auto;
+  padding:14px;
+  font-size:18px;
+  font-weight:bold;
+  border:none;
+  border-radius:12px;
   background:#4caf50;
   color:white;
-  font-size:20px;
-  font-weight:bold;
-  border-radius:12px;
-  text-decoration:none;
+  cursor:pointer;
+}
+.menu-btn:active{transform:scale(0.96)}
+
+.list-box{
+  max-width:520px;
+  margin:10px auto;
+  display:none;
+}
+
+.list-box div{
+  background:white;
+  margin:6px 0;
+  padding:10px;
+  border-radius:6px;
+  box-shadow:0 2px 6px rgba(0,0,0,.1);
 }
 </style>
 </head>
 
 <body>
 
-<h1>English Adjective Learning</h1>
+<h1>Adjective Game</h1>
 
-<a href="adjective.html" class="start-btn">▶ Start Game</a>
-
-<div class="box">
-  <h2>Adjectives</h2>
-  <div class="list" id="adjList"></div>
+<!-- language -->
+<div>
+  <button class="lang-btn active" onclick="setLang('jp',this)">日本語</button>
+  <button class="lang-btn" onclick="setLang('kr',this)">한국어</button>
 </div>
 
-<div class="box">
-  <h2>Not Adjectives</h2>
-  <div class="list" id="notList"></div>
+<!-- description -->
+<div class="desc" id="desc-jp">
+  英単語が「形容詞かどうか」を当てるゲームです。<br>
+  正しいボタンをタップして遊びましょう。
+</div>
+
+<div class="desc" id="desc-kr" style="display:none">
+  영어 단어가 형용사인지 맞히는 게임입니다.<br>
+  맞는 버튼을 눌러보세요.
+</div>
+
+<!-- buttons -->
+<button class="menu-btn" onclick="location.href='adjective.html'">
+🎮 ゲームスタート
+</button>
+
+<button class="menu-btn" onclick="toggleList('adjList')">
+📘 形容詞リスト
+</button>
+
+<div class="list-box" id="adjList">
+  <div>happy</div><div>sad</div><div>angry</div><div>excited</div><div>proud</div>
+  <div>kind</div><div>polite</div><div>brave</div><div>careful</div><div>lazy</div>
+  <div>big</div><div>small</div><div>tall</div><div>short</div><div>wide</div>
+  <div>fast</div><div>slow</div><div>early</div><div>late</div><div>hot</div>
+  <div>cold</div><div>warm</div><div>cool</div><div>old</div><div>new</div>
+  <div>easy</div><div>hard</div><div>simple</div><div>difficult</div><div>strong</div>
+  <div>weak</div><div>heavy</div><div>light</div><div>clean</div><div>dirty</div>
+  <div>bright</div><div>dark</div><div>quiet</div><div>noisy</div><div>safe</div>
+</div>
+
+<button class="menu-btn" onclick="toggleList('notList')">
+📕 形容詞じゃないリスト
+</button>
+
+<div class="list-box" id="notList">
+  <div>teacher</div><div>student</div><div>doctor</div><div>baby</div>
+  <div>dog</div><div>cat</div><div>bird</div><div>run</div><div>eat</div>
+  <div>drink</div><div>sleep</div><div>read</div><div>write</div>
+  <div>school</div><div>house</div><div>city</div><div>book</div>
+  <div>pen</div><div>chair</div><div>table</div><div>music</div>
+  <div>movie</div><div>game</div><div>food</div><div>water</div>
 </div>
 
 <script>
-function speak(t){
-  speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(t);
-  u.lang="en-US";
-  speechSynthesis.speak(u);
+function setLang(lang,btn){
+  document.getElementById("desc-jp").style.display = lang==="jp"?"block":"none";
+  document.getElementById("desc-kr").style.display = lang==="kr"?"block":"none";
+  document.querySelectorAll(".lang-btn").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
 }
 
-/* Updated & expanded word list */
-const words=[
-  ["happy",true],["sad",true],["angry",true],["excited",true],["kind",true],
-  ["brave",true],["lazy",true],["friendly",true],["polite",true],
-  ["honest",true],["careful",true],["helpful",true],["patient",true],
-  ["big",true],["small",true],["tall",true],["short",true],
-  ["fast",true],["slow",true],["strong",true],["weak",true],
-  ["hot",true],["cold",true],["warm",true],["cool",true],
-  ["clean",true],["dirty",true],["quiet",true],["noisy",true],
-  ["easy",true],["difficult",true],["important",true],["safe",true],
-  ["dangerous",true],["bright",true],["dark",true],["young",true],["old",true],
-
-  ["teacher",false],["student",false],["dog",false],["cat",false],
-  ["run",false],["jump",false],["eat",false],["drink",false],
-  ["book",false],["school",false],["music",false],["water",false],
-  ["city",false],["car",false],["house",false],["friend",false],
-  ["play",false],["study",false],["read",false],["write",false]
-];
-
-const adjList=document.getElementById("adjList");
-const notList=document.getElementById("notList");
-
-words.forEach(w=>{
-  const d=document.createElement("div");
-  d.textContent=w[0];
-  d.onclick=()=>speak(w[0]);
-  (w[1]?adjList:notList).appendChild(d);
-});
+function toggleList(id){
+  const el = document.getElementById(id);
+  el.style.display = el.style.display==="block" ? "none" : "block";
+}
 </script>
 
 </body>
