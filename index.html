@@ -12,37 +12,34 @@ body{
   text-align:center;
   padding:30px 20px;
 }
-h1{
-  font-size:30px;
-  margin-bottom:10px;
-}
-.lang-buttons{
-  margin-bottom:15px;
-}
-.lang-buttons button{
-  padding:8px 14px;
-  margin:0 5px;
-  border:none;
-  border-radius:8px;
-  font-weight:bold;
-  cursor:pointer;
-}
+h1{font-size:28px}
+
 .box{
-  max-width:560px;
+  max-width:600px;
   margin:20px auto;
   background:white;
-  padding:24px;
+  padding:22px;
   border-radius:14px;
   box-shadow:0 4px 10px rgba(0,0,0,.1);
 }
-ul{
-  text-align:left;
-  line-height:1.6;
+
+.list{
+  max-width:500px;
+  margin:auto;
 }
+.list div{
+  background:#fff;
+  padding:12px;
+  margin:6px 0;
+  border-radius:6px;
+  cursor:pointer;
+  box-shadow:0 2px 6px rgba(0,0,0,.1);
+}
+
 .start-btn{
   display:inline-block;
-  margin-top:20px;
-  padding:16px 28px;
+  margin:18px 0;
+  padding:16px 30px;
   background:#4caf50;
   color:white;
   font-size:20px;
@@ -50,68 +47,61 @@ ul{
   border-radius:12px;
   text-decoration:none;
 }
-.start-btn:active{
-  transform:scale(0.95);
-}
-.footer{
-  margin-top:25px;
-  font-size:13px;
-  color:#666;
-}
 </style>
 </head>
 
 <body>
 
-<h1>English Adjective Game</h1>
+<h1>English Adjective Learning</h1>
 
-<div class="lang-buttons">
-  <button onclick="setLang('jp')">日本語</button>
-  <button onclick="setLang('kr')">한국어</button>
+<a href="adjective.html" class="start-btn">▶ Start Game</a>
+
+<div class="box">
+  <h2>Adjectives</h2>
+  <div class="list" id="adjList"></div>
 </div>
 
 <div class="box">
-  <div id="desc"></div>
-
-  <a href="adjective.html" class="start-btn">
-    ▶ Start Game
-  </a>
-</div>
-
-<div class="footer">
-  Simple English learning game
+  <h2>Not Adjectives</h2>
+  <div class="list" id="notList"></div>
 </div>
 
 <script>
-const text = {
-  jp: `
-  <h2>あそびかた</h2>
-  <ul>
-    <li>英単語が1つ表示されます。</li>
-    <li>単語をタップすると日本語が表示されます。</li>
-    <li>形容詞だと思ったら <strong>Adjective</strong>。</li>
-    <li>違うと思ったら <strong>Not Adjective</strong>。</li>
-    <li>正解するとスコアが増えます。</li>
-  </ul>
-  `,
-  kr: `
-  <h2>게임 방법</h2>
-  <ul>
-    <li>영어 단어가 하나 표시됩니다.</li>
-    <li>단어를 누르면 일본어 뜻이 나옵니다.</li>
-    <li>형용사라면 <strong>Adjective</strong>를 누르세요.</li>
-    <li>아니라면 <strong>Not Adjective</strong>를 누르세요.</li>
-    <li>정답이면 점수가 올라갑니다.</li>
-  </ul>
-  `
-};
-
-function setLang(lang){
-  document.getElementById("desc").innerHTML = text[lang];
+function speak(t){
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(t);
+  u.lang="en-US";
+  speechSynthesis.speak(u);
 }
 
-// default language
-setLang("jp");
+/* Updated & expanded word list */
+const words=[
+  ["happy",true],["sad",true],["angry",true],["excited",true],["kind",true],
+  ["brave",true],["lazy",true],["friendly",true],["polite",true],
+  ["honest",true],["careful",true],["helpful",true],["patient",true],
+  ["big",true],["small",true],["tall",true],["short",true],
+  ["fast",true],["slow",true],["strong",true],["weak",true],
+  ["hot",true],["cold",true],["warm",true],["cool",true],
+  ["clean",true],["dirty",true],["quiet",true],["noisy",true],
+  ["easy",true],["difficult",true],["important",true],["safe",true],
+  ["dangerous",true],["bright",true],["dark",true],["young",true],["old",true],
+
+  ["teacher",false],["student",false],["dog",false],["cat",false],
+  ["run",false],["jump",false],["eat",false],["drink",false],
+  ["book",false],["school",false],["music",false],["water",false],
+  ["city",false],["car",false],["house",false],["friend",false],
+  ["play",false],["study",false],["read",false],["write",false]
+];
+
+const adjList=document.getElementById("adjList");
+const notList=document.getElementById("notList");
+
+words.forEach(w=>{
+  const d=document.createElement("div");
+  d.textContent=w[0];
+  d.onclick=()=>speak(w[0]);
+  (w[1]?adjList:notList).appendChild(d);
+});
 </script>
 
 </body>
